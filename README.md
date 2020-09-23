@@ -49,3 +49,30 @@ Select **Create new VMFS datastore** and hit next<br />
 Select the desired storage device, name the datastore, and hit next<br />
 Use th default allocation options and hit next<br />
 Review the settings and hit finish
+
+### vSwitch & ISO Directory Configuration
+
+#### Creating a Datastore Directory & Uploading Files
+Click **Storage** in the menu on the left<br />
+Open the desired datastore and click **Datastore browser**<br />
+Click **Create directory**<br />
+Name the directory and click **Create directory**<br />
+Highlight the new directory and click **Upload**<br />
+Upload the desired file(s)
+
+#### Creating Virtual Switches & Port Groups
+Click **Networking** in the menu on the left<br />
+Select **Virtual switches** and click **Add standard virtual switch**<br />
+Name the vSwitch, delete the uplink if necessary, and click add<br />
+Select **Port groups** and click **Add port group**<br />
+Name the port group, assign it to desired vSwitch, and click add
+
+#### Creating Virtual Machines
+Right-click **Virtual Machines** in the menu on the left and select **Create/Register VM**<br />
+Highlight **Create a new virtual machine** and click next<br />
+Name the virtual machine, select the correct settings based on the VM, and click next<br />
+Select the desire datastore to save the VM to and click next<br />
+Edit the settings based on the VM, add hard disks and network adapters if necessary<br />
+Select **Datastore ISO file** from the **CD/DVD Drive** dropdown menu and navigate to the desired ISO file<br />
+*(Make sure to check all the desired **Connect** boxes to ensure components are connected)*<br />
+Click next, review VM settings and preferences, and click finish
