@@ -76,3 +76,76 @@ Edit the settings based on the VM, add hard disks and network adapters if necess
 Select **Datastore ISO file** from the **CD/DVD Drive** dropdown menu and navigate to the desired ISO file<br />
 *(Make sure to check all the desired **Connect** boxes to ensure components are connected)*<br />
 Click next, review VM settings and preferences, and click finish
+
+#### VyOS Installation & Configuration
+Ensure only 2 network adapters are connected prior to booting VM *(delete any additional adapters in VM settings)*<br />
+Ensure that the **Guest OS Version** is **Debian GNU/Linux 10 (64 Bit)**<br />
+Save any changes, boot the VM, and select the first option on startup<br />
+```
+vyos@vyos:~$ install image
+```
+Select defaults for installation and reboot after installation is complete<br />
+Clear the network interfaces:
+```
+vyos@vyos:~$ delete interfaces ethernet eth0 hw-id
+vyos@vyos:~$ delete interfaces ethernet eth1 hw-id
+vyos@vyos:~$ commit
+vyos@vyos:~$ save
+vyos@vyos:~$ set interfaces ethernet eth0 address dhcp
+vyos@vyos:~$ commit
+vyos@vyos:~$ save
+```
+Hard shutdown the VM *(to ensure new IPs aren't assigned)* and take a base snapshot for VyOS<br />
+Start up the VM and check to see if DHCP address was assigned using:
+```
+vyos@vyos:~$ show interfaces
+```
+Now comes the actual configuration of our VyOS system:
+```
+$ configure
+# set system host-name <hostname>
+(i.e. # set system host-name 480-fw10)
+# set protocols static route 0.0.0.0/0 next-hop 192.168.3.250
+# delete interfaces ethernet eth0 address dhcp
+# set interfaces ethernet eth0 address 192.168.3.xx/24
+(i.e. # set interfaces ethernet eth0 address 192.168.3.50/24)
+# set interfaces ethernet eth1 address 10.0.17.2/24
+# set nat source rule 10 description "NAT to CYBER"
+# set nat source rule 10 outbound-interface eth0
+# set nat source rule 10 source address 10.0.17.0/24
+# set nat source rule 10 translation address masquerade
+# set system name-server 192.168.4.4
+# set system name-server 192.168.4.5
+# set service dns forwarding allow-from 10.0.17.0/24
+# set service dns forwarding listen-address 10.0.17.2
+# set service dns forwarding system
+```
+
+#### Xubuntu Installation & Configuration
+Create the VM:<br />
+* Give it **3072 MB** of **Memory**<br />
+* Add another **Hard disk**<br />
+* Set them both to **Thin provisioned**<br />
+* Set the **Network adapter** to **VM Network** *(temporarilt for updates)*<br />
+* Set the **CD/DVD Media** to the Xubuntu ISO file
+Power on the VM and choose the defaults for the installation<br />
+Create a generic user *(champuser)* and hostname for the system<br />
+Reboot the system if an option to update isn't prompted<br />
+Install updates after VM has rebooted<br />
+```
+$ sudo apt-get install git
+$ git clone https://github.com/gmcyber/480share
+$ sudo -i
+$ cd /home/<generic user>/480share/
+($ cd /home/champuser/480share)
+$ chmod +x ubuntu-sealer.sh
+$ ./ubuntu-sealer.sh
+$ cd ..
+$ rm -rf 480share/
+$ shutdown -h now
+```
+Change **CD/DVD Drive** to **Host device** in VM settings and save<br />
+Take a base snapshot of the VM<br />
+Change the **Network adapter** to **480-WAN** and start the VM *(make sure 480-fw is started prior to booting VM)*<br />
+Add a new administrative user and delete the generic user<br />
+Set the IP address to **10.0.17.100/24** and the gateway/DNS server to **10.0.17.2**
