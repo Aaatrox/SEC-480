@@ -67,6 +67,8 @@ Name the vSwitch, delete the uplink if necessary, and click add<br />
 Select **Port groups** and click **Add port group**<br />
 Name the port group, assign it to desired vSwitch, and click add
 
+### Configuring VyOS & Xubuntu Virtual Machines
+
 #### Creating Virtual Machines
 Right-click **Virtual Machines** in the menu on the left and select **Create/Register VM**<br />
 Highlight **Create a new virtual machine** and click next<br />
